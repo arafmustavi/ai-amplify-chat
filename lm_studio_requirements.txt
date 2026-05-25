@@ -1,0 +1,6 @@
+flask
+streamlit 
+pandas 
+plotly-express 
+streamlit-authenticator
+openai
