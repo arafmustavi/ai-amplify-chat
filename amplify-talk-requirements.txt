@@ -1,0 +1,9 @@
+flask
+streamlit 
+pandas 
+plotly-express 
+streamlit-authenticator
+openai
+supertonic
+sounddevice
+soundfile
