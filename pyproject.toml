@@ -1,0 +1,28 @@
+[project]
+name = "amplify"
+version = "0.2.0"
+description = "Local-first SLM chat platform with pluggable inference backends."
+authors = [{ name = "Araf Mustavi" }]
+readme = "README.md"
+license = { text = "MIT" }
+requires-python = ">=3.11"
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+extend-exclude = ["data", "docs"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM"]
+
+[tool.black]
+line-length = 100
+target-version = ["py311"]
+
+[tool.pytest.ini_options]
+addopts = "-ra --strict-markers"
+testpaths = ["tests"]
+
+[tool.mypy]
+python_version = "3.11"
+ignore_missing_imports = true

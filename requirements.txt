@@ -1,31 +1,9 @@
-transformers == 5.4.0
-torch
-flask
-streamlit 
-pandas 
-plotly-express 
-streamlit-authenticator
-openai
-supertonic
-sounddevice
-soundfile
-
-# requirements for TTS
-
-flask
-streamlit 
-pandas 
-plotly-express 
-streamlit-authenticator
-openai
-supertonic
-sounddevice
-soundfile
-
-#requirements for LM Studio
-flask
-streamlit 
-pandas 
-plotly-express 
-streamlit-authenticator
-openai
+flask==3.0.3
+gunicorn==22.0.0
+pydantic==2.8.2
+pydantic-settings==2.4.0
+python-dotenv==1.0.1
+requests==2.32.3
+streamlit==1.37.1
+pandas==2.2.2
+plotly==5.23.0

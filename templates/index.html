@@ -1,231 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AMPLIFY | AI</title>
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-    <style>
-        :root {
-            --bg: #f8f9fa;
-            --accent: #000000;
-            --glass: rgba(255, 255, 255, 0.9);
-            --user-bubble: #000;
-            --ai-bubble: #fff;
-            --text: #1a1a1a;
-            --muted: #6c757d;
-        }
-
-        body {
-            font-family: 'Inter', -apple-system, sans-serif;
-            background: var(--bg);
-            margin: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-        }
-
-        #chat-container {
-            width: 90%;
-            max-width: 600px;
-            height: 85vh;
-            background: var(--glass);
-            backdrop-filter: blur(15px);
-            border-radius: 28px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.05);
-            display: flex;
-            flex-direction: column;
-            border: 1px solid rgba(0,0,0,0.05);
-            overflow: hidden;
-        }
-
-        #chat-header {
-            padding: 25px;
-            text-align: center;
-            border-bottom: 1px solid rgba(0,0,0,0.03);
-        }
-
-        #chat-header h1 {
-            margin: 0;
-            font-size: 1.1rem;
-            letter-spacing: 5px;
-            font-weight: 900;
-            color: var(--accent);
-        }
-
-        #chat-box {
-            flex: 1;
-            padding: 20px;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .message {
-            padding: 12px 18px;
-            border-radius: 20px;
-            max-width: 85%;
-            font-size: 14px;
-            line-height: 1.6;
-        }
-
-        /* Markdown Styling */
-        .message p { margin: 0 0 10px 0; }
-        .message p:last-child { margin-bottom: 0; }
-        .message strong { font-weight: 700; }
-
-        .user-msg {
-            background: var(--user-bubble);
-            color: white;
-            align-self: flex-end;
-            border-bottom-right-radius: 4px;
-        }
-
-        .ai-msg {
-            background: var(--ai-bubble);
-            color: var(--text);
-            align-self: flex-start;
-            border-bottom-left-radius: 4px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
-        }
-
-        .meta-info {
-            font-size: 10px;
-            color: var(--muted);
-            margin-top: 8px;
-            display: block;
-        }
-
-        /* Animation dots */
-        #typing {
-            display: none;
-            padding: 15px;
-            margin-left: 20px;
-        }
-
-        .dot {
-            width: 6px;
-            height: 6px;
-            background: #bbb;
-            border-radius: 50%;
-            display: inline-block;
-            animation: bounce 1.4s infinite ease-in-out;
-        }
-        .dot:nth-child(2) { animation-delay: 0.2s; }
-        .dot:nth-child(3) { animation-delay: 0.4s; }
-
-        @keyframes bounce {
-            0%, 80%, 100% { transform: scale(0); }
-            40% { transform: scale(1.0); }
-        }
-
-        #input-area {
-            padding: 20px;
-            background: #fff;
-            display: flex;
-            gap: 12px;
-        }
-
-        #user-input {
-            flex: 1;
-            border: none;
-            background: #f1f3f5;
-            padding: 14px 20px;
-            border-radius: 15px;
-            outline: none;
-        }
-
-        #send-btn {
-            background: var(--accent);
-            color: white;
-            border: none;
-            padding: 0 25px;
-            border-radius: 15px;
-            cursor: pointer;
-            font-weight: 600;
-        }
-
-        #send-btn:disabled { opacity: 0.3; }
-        
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AMPLIFY — Local SLM Chat</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/glass.css') }}"/>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 </head>
 <body>
-
-<div id="chat-container">
-    <div id="chat-header"><h1>AMPLIFY</h1></div>
-    <div id="chat-box"></div>
-    
-    <div id="typing">
-        <span class="dot"></span>
-        <span class="dot"></span>
-        <span class="dot"></span>
-    </div>
-
-    <div id="input-area">
-        <input type="text" id="user-input" placeholder="Query..." autocomplete="off">
-        <button id="send-btn">Send</button>
-    </div>
-</div>
-
-<script>
-    const chatBox = document.getElementById('chat-box');
-    const userInput = document.getElementById('user-input');
-    const sendBtn = document.getElementById('send-btn');
-    const typingIndicator = document.getElementById('typing');
-
-    marked.setOptions({ breaks: true, gfm: true });
-
-    function appendMessage(role, text, latency = null) {
-        const msgDiv = document.createElement('div');
-        msgDiv.className = `message ${role === 'user' ? 'user-msg' : 'ai-msg'}`;
-        
-        const htmlContent = role === 'ai' ? marked.parse(text) : text;
-        let inner = `<div>${htmlContent}</div>`;
-        
-        if (latency) {
-            inner += `<span class="meta-info">Server Response: ${latency}s</span>`;
-        }
-        
-        msgDiv.innerHTML = inner;
-        chatBox.appendChild(msgDiv);
-        chatBox.scrollTop = chatBox.scrollHeight;
-    }
-
-    async function sendMessage() {
-        const text = userInput.value.trim();
-        if (!text) return;
-
-        appendMessage('user', text);
-        userInput.value = '';
-        userInput.disabled = true;
-        sendBtn.disabled = true;
-        typingIndicator.style.display = 'block';
-        chatBox.scrollTop = chatBox.scrollHeight;
-
-        try {
-            const response = await fetch('/ask', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ prompt: text })
-            });
-            const data = await response.json();
-            typingIndicator.style.display = 'none';
-            appendMessage('ai', data.response, data.latency);
-        } catch (error) {
-            typingIndicator.style.display = 'none';
-            appendMessage('ai', "Error: System Offline.");
-        } finally {
-            userInput.disabled = false;
-            sendBtn.disabled = false;
-            userInput.focus();
-        }
-    }
-
-    sendBtn.onclick = sendMessage;
-    userInput.onkeypress = (e) => { if (e.key === 'Enter') sendMessage(); };
-</script>
-
+  <div class="backdrop"></div>
+  <main class="glass">
+    <header>
+      <h1>⚡ AMPLIFY</h1>
+      <div class="pill">backend: {{ backend }} · v{{ version }}</div>
+    </header>
+    <section id="log" class="log" aria-live="polite"></section>
+    <form id="chat-form">
+      <textarea id="prompt" placeholder="Ask anything…" rows="2" required></textarea>
+      <button type="submit">Send</button>
+    </form>
+  </main>
+  <script src="{{ url_for('static', filename='js/chat.js') }}"></script>
 </body>
 </html>
