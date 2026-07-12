@@ -34,8 +34,8 @@ AMPLIFY is a locally-hosted, high-performance AI ecosystem. It features a sleek 
 ### 1\. Clone the Repository
 
 ```bash
-git clone https://github.com/arafmustavi/Amplify-Chat.git
-cd Amplify-Chat
+git clone https://github.com/arafmustavi/ai-amplify-chat.git
+cd ai-amplify-chat
 ```
 
 ### 2\. Install Dependencies
@@ -48,7 +48,7 @@ pip install flask transformers accelerate streamlit pandas plotly-express
 ### 3\. Project Structure
 
 ```text
-/Amplify-Chat
+/ai-amplify-chat
 │── app.py                 # Chat Backend (Public)
 │── dashboard.py           # Analytics Dashboard (Private)
 │── amplify_chat_history.csv # Automated Data Logs

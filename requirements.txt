@@ -5,3 +5,27 @@ streamlit
 pandas 
 plotly-express 
 streamlit-authenticator
+openai
+supertonic
+sounddevice
+soundfile
+
+# requirements for TTS
+
+flask
+streamlit 
+pandas 
+plotly-express 
+streamlit-authenticator
+openai
+supertonic
+sounddevice
+soundfile
+
+#requirements for LM Studio
+flask
+streamlit 
+pandas 
+plotly-express 
+streamlit-authenticator
+openai
